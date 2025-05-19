@@ -7,6 +7,8 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include "logging.h"
+
 int (*real_pselect)(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
 int (*real_pselect6)(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
 int (*real_select)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
@@ -33,15 +35,21 @@ __attribute__((constructor)) void __depselect_init(void)
 
 int pselect(int nfds, fd_set* restrict readfds, fd_set* restrict writefds, fd_set* restrict exceptfds, const struct timespec* restrict timeout, const __sigset_t* restrict sigmask)
 {
+    preeny_info("pselect() blocked, returned fd : %d\n", returned_fd);
+
     return returned_fd;
 }
 
 int pselect6(int nfds, fd_set* restrict readfds, fd_set* restrict writefds, fd_set* restrict exceptfds, const struct timespec* restrict timeout, const __sigset_t* restrict sigmask)
 {
+    preeny_info("pselect6() blocked, returned fd : %d\n", returned_fd);
+
     return returned_fd;
 }
 
 int select(int nfds, fd_set *restrict readfds, fd_set *restrict writefds, fd_set *restrict exceptfds, struct timeval *restrict timeout)
 {
+    preeny_info("select() blocked, returned fd : %d\n", returned_fd);
+
     return returned_fd;
 }
