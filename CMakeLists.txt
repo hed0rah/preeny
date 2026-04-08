@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 2.6)
-project (Preeny)
+cmake_minimum_required(VERSION 3.5)
+project(Preeny)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -59,9 +59,14 @@ target_link_libraries(detime common-preeny dl)
 add_library(deuid SHARED src/deuid.c)
 target_link_libraries(deuid common-preeny dl)
 
-# Patch
-add_library(patch SHARED src/patch.c)
-target_link_libraries(patch common-preeny ini_config dl)
+# Patch (optional: requires libini_config-dev)
+find_library(INI_CONFIG_LIB ini_config)
+if(INI_CONFIG_LIB)
+    add_library(patch SHARED src/patch.c)
+    target_link_libraries(patch common-preeny ini_config dl)
+else()
+    message(STATUS "libini_config not found -- skipping patch.so (install libini-config-dev to enable)")
+endif()
 
 # EOF killer
 add_library(eofkiller SHARED src/eofkiller.c)
